@@ -6,7 +6,6 @@ int main()
 {
 	char arr[100];
 	scanf("%s",arr);
-
 	printf(strcmp(arr,"IOI")==0 ? "IOI is the International Olympiad in Informatics." : "I don't care."); // strcmp(arr) 은 문자열 arr의 길이
 	return 0;
 }
