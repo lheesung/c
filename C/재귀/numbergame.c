@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <time.h>
 
-int a, b, x, y, cnt, chance,command; // 선언
+int a, b, x, y, cnt, chance,command,help; // 선언
 
 void randomNum(int k, int q) {
   printf("무슨 수일까요? : ");
@@ -26,8 +26,7 @@ void randomNum(int k, int q) {
   randomNum(k, q); // 위 조건을 통과한뒤 다시 자기 자신 호출
 }
 
-void game()
-{
+void game(){
   cnt=0;
   printf("입력횟수를 입력해주세요 : ");
   scanf("%d", &chance); // 입력 기회의 횟수를 입력
@@ -47,8 +46,21 @@ void game()
   }
 }
 
-int main()
-{ 
+int main(){
+
+  printf("게임방법을 보실건가요? yes = 1\n");
+  printf("시작하려면 아무 숫자나 누르세요(1 제외)\n");
+  scanf("%d",&help);
+  if(help == 1){
+    printf("----------------------------------------------------------------------\n");
+    printf("                             <도움말>\n");
+    printf("1. 먼저 난수의 범위를 n m 형식으로 입력해주세요\n");
+    printf("2. 몇 번만에 맞출건지 도전 횟수를 입력해주세요\n");
+    printf("3. 입력 횟수가 바닥나기 전에 무슨 수 인지 맞춰보세요\n");
+    printf("4. 게임오버가 되면 다시시작할지 1 or 0 을 입력해주세요\n");
+    printf("----------------------------------------------------------------------\n");
+  }
+  
   printf("범위를 입력해주세요(n~m) : ");
   scanf("%d %d", &a, &b); // 랜덤으로 뽑을 수의 범위를 입력
   if (b < a){ // a~b 이기에 b가a보다 작으면 프로그램을 종료
