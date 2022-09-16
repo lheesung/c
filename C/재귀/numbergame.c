@@ -6,7 +6,7 @@ int a, b, x, y, cnt, chance,command,help; // 선언
 
 void randomNum(int k, int q) {
   printf("무슨 수일까요? : ");
-  scanf("%d", &y);
+  scanf("%d", &y); // 답 입력
   puts("");
   cnt++; //입력횟수 + 1
   if (y != k) { // 입력이 틀렸을 때
@@ -23,7 +23,7 @@ void randomNum(int k, int q) {
     printf("게임오버!");
     return; // 게임오버를 출력한 뒤 함수 종료
   }
-  randomNum(k, q); // 위 조건을 통과한뒤 다시 자기 자신 호출
+  randomNum(k, q); // 위 조건을 통과한 뒤 다시 재귀 자신 호출
 }
 
 void game(){
