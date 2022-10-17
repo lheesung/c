@@ -2,10 +2,13 @@
 //         3      A      B       C
 void h(int n,char a,char b, char c){
   if(n==1)
+    // printf("h(%d,%c,%c,%c)",n,a,b,c);
     printf("%d : %c -> %c\n",n,a,c);
   else{
+    // printf("h(%d,%c,%c,%c)",n-1,a,c,b);
     h(n-1,a,c,b);
     printf("%d : %c -> %c\n",n,a,c);
+    // printf("h(%d,%c,%c,%c)",n-1,b,a,c);
     h(n-1,b,a,c);
   }
 }
