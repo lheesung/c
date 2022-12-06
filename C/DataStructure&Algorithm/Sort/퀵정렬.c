@@ -32,9 +32,13 @@ void quicksort(int list[], int left,int right)
 
 int main()
 {
-    int list[6]={10,2,20,7,50,1}; //원래는 정렬 할 수들 가장 마지막의 무한한 수를 넣는다. (2,147,483,647)
+    int n;
+    scanf("%d",&n);
+    int list[30]; //원래는 정렬 할 수들 가장 마지막의 무한한 수를 넣는다. (2,147,483,647)
+    for(int i=0;i<n;i++)
+        scanf("%d",&list[i]);
     quicksort(list,0,5);
-    for(int i=0; i<6; i++)
+    for(int i=0; i<n; i++)
         printf("%d ",list[i]);
     return 0;
 }
