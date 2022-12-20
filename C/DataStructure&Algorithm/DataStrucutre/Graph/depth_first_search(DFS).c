@@ -1,150 +1,96 @@
 #include<stdio.h>
-#include<stdlib.h> 
-#define Q_SIZE 10
+#include<stdlib.h>
 #define MAX_VERTICES 50
 #define TRUE 1
 #define FALSE 0
-// 가까운 노드들을 방문한 때 더 유용함
-typedef int element;
-typedef struct Qtype{
-	element queue[Q_SIZE];//1차원배열큐선언
-		int front, rear;
-}Qtype;
-int visited[MAX_VERTICES];
+// 0 부터 시작 안한다
+
+//그래프 노드(정점)구조체 정의
 typedef struct GraphNode{
-	int vertax;
+	int vertex; // p[x] 값
 	struct GraphNode* link;
 }GraphNode;
+//각 정점의 인접 정점 리스트 시작주소를 포인터 배열 구조체로 정의
 typedef struct GraphType{
-	int n;//정점의 개수 
-	GraphNode* adj_list[MAX_VERTICES];
-}GraphType;
-
-//공백 순차 큐를 생성하는 연산
-Qtype* createQueue(){
-	Qtype* q;
-	q =(Qtype*)malloc(sizeof(Qtype));
-	q->front =0; //front초기값 셋 
-	q->rear =0;//rear 초기값 셋 
-	return q;
-}
-void queue_init(Qtype* q){
-	q->front = q->rear = 0;
-}
-//순차큐가 공백인지 검사연산 
-int is_empty(Qtype* q){
-	return (q->front == q->rear);
-}
-//순차큐가 full인지 검사 연산
-int is_full(Qtype* q){
-	return ((q->rear + 1) % Q_SIZE  == q->front );
-} 
-//순차큐의 rear에 원소를 삽입하는 연산 
-void enqueue(Qtype* q,element item){
-	//full이 아니면 [rear+1]위치에 저장
-	if (is_full(q) == 1 ) {
-		printf("큐가 포화상태입니다.");
-	} 
-	else {
-		q->rear =(q->rear+1) % Q_SIZE; //1. rear위치를 삽입할 위치로 조정 
-		q->queue[q->rear]=item; //2. 아이템 삽입 
-	} 
-}
-//순차큐의 front에서 삭제하는 연산 
-element dequeue(Qtype* q){
-	if (is_empty(q)) return 0;
-	else {
-		q->front = (q->front + 1 ) % Q_SIZE; //1.front의 위치를 삭제할 위치로 조정 
-		return q->queue[q->front]; //2. front위치 값 반환 
-	}
-}
-
-///////////////////////////////////////////////////
+	int n; //정점의 개수 
+	GraphNode* adj_list[MAX_VERTICES];//포인터 배열
+}GraphType; 
+int visited[MAX_VERTICES]; // 50
 //그래프 초기화
-void graph_init(GraphType* g){
+void init(GraphType* g){
 	int v; //v는 정점 
 	g->n=0; //그래프의 정점수 초기화 
-	for (v = 0;v < MAX_VERTICES;v++){
-      /*정점연결배열 주소값*/g->adj_list[v] =NULL;	
+	for (v = 0;v < MAX_VERTICES;v++){ 
+		g->adj_list[v]=NULL;	// 처음에는 null 로 초기화
 	}
 } 
-//정점 삽입 연산
-void insert_vertax(GraphType* g, int v){
-	if( g -> n+1 > MAX_VERTICES){
-		printf("그래프: 정점의 개수 초과\n");
+void insert_vertex(GraphType* g, int v){//정점 개수 1증가 
+	if((g->n)+1 >MAX_VERTICES){
+	   printf("그래프: 정점의 개수 초과");
 		return; 
 	}
-	g -> n++;//[문]정점개수 증가
+	g->n++; //[문]정점개수 증가
 } 
 //간선 삽입 연산
-void insert_edge(GraphType* g, int u, int v) { //u ->v1->...
-	GraphNode* node;
-	if (u>=g->n || v>=g->n){
-			printf("그래프: 정점번호 오류");
+void insert_edge(GraphType* g, int u, int v) { //u = 0(0번정점), v = 1
+	GraphNode  *node, *p;
+	if (u>=g->n || v>=g->n){ // 배열의 크기를 벗어날 때
+			printf("그래프: 정점번호 오류\n");
 		return; 
 	}
 	node = (GraphNode*)malloc(sizeof(GraphNode));
-	node->vertax = v;
-	node->link = NULL; // 다음노드는 내가 모르니간 NULL
-	if (g->adj_list[u] ==NULL){
-		g->adj_list[u]= node; //새로운 노드 주소로 갱신 
+	node->vertex= v;
+	if (g->adj_list[u] == NULL ){
+		node->link=g->adj_list[u];//링크를 정점의 포인터배열 시작주소로 저장 
+		g->adj_list[u]=node;//새로운 노드 주소로 갱신 
 	}
-	else{
-		GraphNode* p=(GraphNode*)malloc(sizeof(GraphNode)) ;
-		for(p = g->adj_list[u];p->link!=NULL;p = p->link);
-		p->link = node;//새로운 노드 주소
+	else{ //1번째의 주소있음(null 아님)
+		for(p=g->adj_list[u];p->link!=NULL;p=p->link); // 계속 다음 노드의 시작 주소를 인용 / 맨 끝으로
+		p->link = node;//p는 리스트의 마지막 노드 / for문으로 마지막으로 돌림
+		node->link = NULL;
 	}
-		
 }
 void print_adj_list(GraphType* g){
 	int i,j;
-	for (i=0;i<g->n;i++){
-		GraphNode* p =g->adj_list[i]; 
+	GraphNode* p ;
+	for (i=0;i<g->n;i++){ 
 		printf("정점 %d의 인접리스트",i);
-		for (;p!=NULL;p=p->link){
-			printf("->%d",p->vertax);
+		for (p =g->adj_list[i];p!=NULL;p=p->link){
+			printf("->%d",p->vertex);
 		}
 		printf("\n");
 	}
 }
-void bfsMatrix(GraphType* g, int v){
-	GraphNode* w;
-	Qtype q;
-	queue_init(&q);
-	visited[v]= TRUE; //visited배열에 정점 V 방문표시  
-	printf("%C 방문 -> " ,v + 'A'); //방문한 정점 문자로 출력
-	enqueue(&q, v);//큐에 처음 정점 삽입
-	while (!is_empty(&q)){
-		v = dequeue(&q);//[문] 정점을 큐에서 꺼내어 v에 저장(방문)
-		for (w =g->adj_list[v];w!=NULL;w=w->link) {
-			if (visited[w->vertax]==0){ //v,w가 연결 && w 미방문이면 
-				visited[w->vertax] = TRUE; //방문표시 배열/*방문표시 */ 
-				printf("%C 방문->",w-> vertax+'A');
-				enqueue(&q, w->vertax);//[문]인접한 정점을 큐에 삽입
-			}
+void dfs_list(GraphType* g, int v){ // v = 1
+	GraphNode* w; // 1번과 연결된 노드를 방물할 때 쓰기
+	visited[v] = TRUE; //방문배열에 정점 방문 저장 / 여기 다녀감(방문했다? 그럼 출력)
+	printf("정점 %d-> ", v);//정점출력
+	for(w=g->adj_list[v];w!=NULL;w=w->link){
+		if (visited[w->vertex]== 0){//미방문
+			dfs_list(g, w->vertex);//정점 탐색호출
 		}
-		
 	}
 }
 int main(){
 	GraphType* g;
+	int n;
 	g=(GraphType*) malloc(sizeof(GraphType));
-	graph_init(g);
-	for (int i = 0;i<6;i++){
-		insert_vertax(g,i);
+	init(g);
+	for (int i = 0;i<5;i++){
+		 insert_vertex(g, i);//[문]정점입력 함수 호출
 	}
-	insert_edge(g,0,2);	insert_edge(g,3,2);
-	insert_edge(g,0,4);	insert_edge(g,3,5);
-	insert_edge(g,1,2); insert_edge(g,4,0);
-	insert_edge(g,1,5); insert_edge(g,4,5);	
-	insert_edge(g,2,0); insert_edge(g,5,1);
-	insert_edge(g,2,1);	insert_edge(g,5,2);	
-	insert_edge(g,2,3);	insert_edge(g,5,3);
-	insert_edge(g,5,4);
-	printf("너비 우선탬색 \n");
-	bfsMatrix(g,0);
-	printf("\n");
-	
+	insert_edge(g,0,1);	insert_edge(g,0,2);
+	insert_edge(g,0,4);	insert_edge(g,1,0);
+	insert_edge(g,1,2); insert_edge(g,2,0);
+	insert_edge(g,2,1); insert_edge(g,2,3);	
+	insert_edge(g,2,4); insert_edge(g,3,2);
+	insert_edge(g,3,4);	insert_edge(g,4,0);	
+	insert_edge(g,4,2);	insert_edge(g,4,3);	
+	// print_adj_list(g);
+		
+	printf("깊이 우선탐색 시작 정점 입력 \n");
+	scanf("%d",&n);
+	dfs_list(g, n); // n = 1
 	free(g);	
 	return 0;
 	

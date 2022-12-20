@@ -4,6 +4,7 @@
 #define MAX_VERTICES 50
 #define TRUE 1
 #define FALSE 0
+// 가까운 노드들을 방문한 때 더 유용함
 typedef int element;
 typedef struct Qtype{
 	element queue[Q_SIZE];//1차원배열큐선언
@@ -64,16 +65,16 @@ void graph_init(GraphType* g){
 	int v; //v는 정점 
 	g->n=0; //그래프의 정점수 초기화 
 	for (v = 0;v < MAX_VERTICES;v++){
-      /*정점연결배열 주소값*/ =NULL;	
+      /*정점연결배열 주소값*/g->adj_list[v] =NULL;	
 	}
 } 
 //정점 삽입 연산
 void insert_vertax(GraphType* g, int v){
-	if(/*정점 개수 1증가*/  > MAX_VERTICES){
+	if( g -> n+1 > MAX_VERTICES){
 		printf("그래프: 정점의 개수 초과\n");
 		return; 
 	}
-	//[문]정점개수 증가
+	g -> n++;//[문]정점개수 증가
 } 
 //간선 삽입 연산
 void insert_edge(GraphType* g, int u, int v) { //u ->v1->...
@@ -84,17 +85,14 @@ void insert_edge(GraphType* g, int u, int v) { //u ->v1->...
 	}
 	node = (GraphNode*)malloc(sizeof(GraphNode));
 	node->vertax = v;
-	node->link = NULL;
+	node->link = NULL; // 다음노드는 내가 모르니간 NULL
 	if (g->adj_list[u] ==NULL){
-	
-		g->adj_list[u]=  //새로운 노드 주소로 갱신 
-		
+		g->adj_list[u]= node; //새로운 노드 주소로 갱신 
 	}
 	else{
 		GraphNode* p=(GraphNode*)malloc(sizeof(GraphNode)) ;
-		for(p = /**/);
-		p->link = //새로운 노드 주소
-		
+		for(p = g->adj_list[u];p->link!=NULL;p = p->link);
+		p->link = node;//새로운 노드 주소
 	}
 		
 }
@@ -113,17 +111,16 @@ void bfsMatrix(GraphType* g, int v){
 	GraphNode* w;
 	Qtype q;
 	queue_init(&q);
-	/**/= TRUE; //visited배열에 정점 V 방문표시  
+	visited[v]= TRUE; //visited배열에 정점 V 방문표시  
 	printf("%C 방문 -> " ,v + 'A'); //방문한 정점 문자로 출력
 	enqueue(&q, v);//큐에 처음 정점 삽입
 	while (!is_empty(&q)){
-		v =//[문] 정점을 큐에서 꺼내어 v에 저장(방문)
-		
+		v = dequeue(&q);//[문] 정점을 큐에서 꺼내어 v에 저장(방문)
 		for (w =g->adj_list[v];w!=NULL;w=w->link) {
 			if (visited[w->vertax]==0){ //v,w가 연결 && w 미방문이면 
-				/*방문표시 배열*/ = TRUE; //방문표시 
+				visited[w->vertax] = TRUE; //방문표시 배열/*방문표시 */ 
 				printf("%C 방문->",w-> vertax+'A');
-				//[문]인접한 정점을 큐에 삽입
+				enqueue(&q, w->vertax);//[문]인접한 정점을 큐에 삽입
 			}
 		}
 		
@@ -136,13 +133,14 @@ int main(){
 	for (int i = 0;i<6;i++){
 		insert_vertax(g,i);
 	}
-	insert_edge(g,0,1);	insert_edge(g,0,2);
-	insert_edge(g,0,4);	insert_edge(g,1,0);
-	insert_edge(g,1,2); insert_edge(g,2,0);
-	insert_edge(g,2,1); insert_edge(g,2,3);	
-	insert_edge(g,2,4); insert_edge(g,3,2);
-	insert_edge(g,3,4);	insert_edge(g,4,0);	
-	insert_edge(g,4,2);	insert_edge(g,4,3);
+	insert_edge(g,0,2);	insert_edge(g,3,2);
+	insert_edge(g,0,4);	insert_edge(g,3,5);
+	insert_edge(g,1,2); insert_edge(g,4,0);
+	insert_edge(g,1,5); insert_edge(g,4,5);	
+	insert_edge(g,2,0); insert_edge(g,5,1);
+	insert_edge(g,2,1);	insert_edge(g,5,2);	
+	insert_edge(g,2,3);	insert_edge(g,5,3);
+	insert_edge(g,5,4);
 	printf("너비 우선탬색 \n");
 	bfsMatrix(g,0);
 	printf("\n");
