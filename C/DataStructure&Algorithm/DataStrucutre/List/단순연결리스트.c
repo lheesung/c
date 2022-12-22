@@ -21,8 +21,7 @@ int main(){
     n3->data = 30;   // 6) n3의 데이터에 30을 저장
     n3->next = NULL; // 7) n3의 다음 노드 주소 next에 NULL 저장
     head = n1;       // 8)n1의 주소 저장(참조)
-    while (head != NULL)
-    {
+    while (head != NULL){
         printf("%d->", head->data);
         head = head->next; // 9) head에 다음 노드 주소 저장
     }
