@@ -109,12 +109,3 @@ void deleteNode(Head *phead)
     free(removed);
     phead->size--;
 }
-void printList(Head *phead)
-{
-    DNode *p = phead->link;
-    do
-    {
-        printf("[%d] ->", p->data);
-        p = p->next;
-    } while (p != phead->link);
-}
