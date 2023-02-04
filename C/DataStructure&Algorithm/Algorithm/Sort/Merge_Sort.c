@@ -23,16 +23,14 @@ void mergesort(int list[], int left,int right){
     int mid;
     if(left<right){
         mid=(left+right)/2;
-        printf("mid : %d\n",mid);
-        printf("left & right : (%d, %d)\n",left, mid);
+        // printf("mid : %d\n",mid);
+        // printf("left & right : (%d, %d)\n",left, mid);
         mergesort(list,left,mid);
-        
-        puts("");
-        printf("mid+1 & right : (%d, %d)\n", mid+1, right);
+        // puts("");
+        // printf("mid+1 & right : (%d, %d)\n", mid+1, right);
         mergesort(list,mid+1,right);
-        
-        puts("");
-        printf("left mid right : (%d, %d, %d)\n", left, mid, right);
+        // puts("");
+        // printf("left mid right : (%d, %d, %d)\n", left, mid, right);
         merge(list,left,mid,right);
     }
 }
